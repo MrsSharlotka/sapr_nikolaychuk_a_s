@@ -1,4 +1,4 @@
-# task1
+# task0
 #
 # Условие:
 # Дан ориентированный ациклический граф G = (V, E), где:
@@ -33,26 +33,26 @@
 #   [1, 0, 0, 1, 1],
 #   [0, 0, 1, 0, 0],
 #   [0, 0, 1, 0, 0]]
-from pathlib import Path
+
 def main(csv_graph: str) -> list[list[int]]:
-    with open(csv_graph, mode="r") as f:
-        edges = [line.strip().split(',') for line in f.readlines()]
-    
-    edge_list = []
+    edges = []
     vertices = set()
-    for e in edges:
-        u, v = map(int, e)
-        edge_list.append((u, v))
+
+    for line in csv_graph.strip().splitlines():
+        u, v = map(int, line.split(','))
+        edges.append((u, v))
         vertices.add(u)
         vertices.add(v)
-    
-    n = max(vertices)
-    
-    matrix = [[0] * n for _ in range(n)]
-    
-    for u, v in edge_list:
-        matrix[u - 1][v - 1] = 1
-    
-    return matrix
 
-print(main(Path(__file__).parent / 'csv_graph.csv'))
+    vertices = sorted(vertices)
+    index = {v: i for i, v in enumerate(vertices)}
+    n = len(vertices)
+
+    matrix = [[0] * n for _ in range(n)]
+
+    for u, v in edges:
+        i, j = index[u], index[v]
+        matrix[i][j] = 1
+        matrix[j][i] = 1
+
+    return matrix
